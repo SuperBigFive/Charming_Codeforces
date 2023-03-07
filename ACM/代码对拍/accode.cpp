@@ -1,0 +1,4 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long
+int const N=1e6+10;int a[N],g[N],f[N],s[N],top,n;inline void work(){int now=0;s[top=0]=0;for(int i=1;i<=n;++i){while(top&&a[s[top]]>=a[i]-i+s[top])now-=(a[s[top]]+a[s[top]]-s[top]+s[top-1]+1)*(s[top]-s[top-1])>>1,--top;if(!top)s[0]=max(0ll,i-a[i]);s[++top]=i;now+=(a[s[top]]+a[s[top]]-s[top]+s[top-1]+1)*(s[top]-s[top-1])>>1;f[i]=now;}}inline void solve(){cin>>n;int sum=0,ans=9e18;for(int i=1;i<=n;++i)cin>>a[i],sum+=a[i];reverse(a+1,a+n+1),work();memcpy(g,f,sizeof(int)*(n+1));reverse(a+1,a+n+1),work();for(int i=1;i<=n;++i)ans=min(ans,sum+(a[i]<<1)-f[i]-g[n-i+1]);cout<<ans<<'\n';}signed main(){ios::sync_with_stdio(0);int t;cin>>t;while(t--)solve();return 0;}
