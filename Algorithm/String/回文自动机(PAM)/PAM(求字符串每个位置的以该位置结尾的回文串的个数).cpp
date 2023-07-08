@@ -46,7 +46,7 @@ void charming () {
 	int res = ins (1);
 	cout << res << " \n"[1 == n];
 	for (int i = 2; i <= n; ++i) {
-		s[i] = (s[i] - 97 + res) % 26 + 97;
+		//s[i] = (s[i] - 97 + res) % 26 + 97;
 		res = ins (i);
 		cout << res << " \n"[i == n];
 	}
