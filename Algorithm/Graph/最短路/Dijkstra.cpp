@@ -1,57 +1,69 @@
 #include <bits/stdc++.h>
 #define ll long long
 #define int ll
-#define pii pair <int, int> 
 using namespace std;
-const int maxn = 5e5 + 5;
+const int N = 2e5 + 5;
 
-int n, m, s, tot;
-int to[maxn], nxt[maxn], w[maxn], head[maxn];
-int cnt[maxn], dis[maxn];
-bool vis[maxn];
+int n;
 
-void init () {
-	fill (head, head + maxn, -1);
-	fill (dis, dis + maxn, INT_MAX);
-}
+void init () {}
 
-void add_edge (int uu, int vv, int ww) {
-	to[tot] = vv;
-	nxt[tot] = head[uu];
-	w[tot] = ww;
-	head[uu] = tot++;
-}
-
-void dijkstra () {
-	priority_queue <pii, vector <pii>, greater <pii> > pq;
-	pq.push (make_pair (0, s));
-	dis[s] = 0;
-	while (!pq.empty ()) {
-		auto [d, u] = pq.top ();
-		pq.pop ();
-		if (vis[u]) continue;
-		vis[u] = true;
-		for (int i = head[u], v; i != -1; i = nxt[i]) {
-			v = to[i];
-			if (vis[v]) continue;
-			if (dis[v] > dis[u] + w[i]) {
-				dis[v] = dis[u] + w[i];
-				pq.push (make_pair (dis[v], v));
+struct Dijsktra {
+	int n, s;
+	vector <int> dis, vis;
+	vector <vector <pair <int, int> > > G;
+	
+	void solve () {
+		priority_queue <pair <int, int>, vector <pair <int, int> >,
+		greater <pair <int, int> > > pq;
+		pq.push (make_pair (0, s)), dis[s] = 0;
+		while (!pq.empty ()) {
+			auto [udis, u] = pq.top ();
+			pq.pop ();
+			vis[u] = 1;
+			for (auto [v, w] : G[u]) {
+				if (vis[v]) continue;
+				else if (dis[v] > dis[u] + w) {
+					dis[v] = dis[u] + w;
+					pq.push (make_pair (dis[v], v));
+				}
 			}
 		}
 	}
-}
+	
+	Dijsktra (int n, int s, vector <vector <pair <int, int> > > G) {
+		this -> n = n, this -> s = s, this -> G = G;
+		dis = vector <int> (n + 5, INT_MAX);
+		vis = vector <int> (n + 5, 0);
+		solve ();
+	}
+};
 
 void charming () {
 	init ();
-	cin >> n >> m >> s;
-	for (int i = 1, u, v, w; i <= m; ++i) {
-		cin >> u >> v >> w;
-		add_edge (u, v, w);
+	cin >> n;	
+	vector <array <int, 3> > pos (n + 5);
+	for (int i = 1; i <= n; ++i) {
+		cin >> pos[i][0] >> pos[i][1];
+		pos[i][2] = i;
 	}
-	dijkstra ();
-	for (int i = 1; i <= n; ++i) 
-	cout << dis[i] << " \n"[i == n];
+	vector <vector <pair <int, int> > > G (n + 5);
+	for (int d = 0; d <= 1; ++d) {
+		sort (pos.begin () + 1, pos.begin () + 1 + n, [&] (array <int, 3> &x,
+		array <int, 3> &y) {return x[d] < y[d];});
+		for (int i = 1, u, v; i <= n; ++i) {
+			u = pos[i][2];
+			if (i > 1) {
+				v = pos[i - 1][2];
+				G[u].emplace_back (make_pair (v, pos[i][d] - pos[i - 1][d]));
+			}
+			if (i < n) {
+				v = pos[i + 1][2];
+				G[u].emplace_back (make_pair (v, pos[i + 1][d] - pos[i][d]));
+			}
+		}
+	}
+	cout << Dijsktra (n, 1, G).dis[n] << endl;
 }
 
 signed main () {
