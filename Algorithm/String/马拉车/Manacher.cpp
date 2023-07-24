@@ -2,54 +2,43 @@
 #define ll long long
 #define int ll
 using namespace std;
-const int maxn = 2e7 + 5;
+const int N = 2e7 + 5;
 
-int n, tot, l, r, tmp_ra;
-int ra[maxn << 1];
-char str[maxn << 1], tmp_str[maxn];
-
-void init () {tot = l = r = tmp_ra = 0;}
-
-void modify_str () {
-	for (int i = 1; i <= n; ++i) {
-		str[++tot] = '#';
-		str[++tot] = tmp_str[i];
+struct Manacher {
+	int n;
+	string s, ns;
+	vector <int> ra;
+	
+	Manacher (string &s) {
+		this -> n = s.size ();
+		this -> s = s;
+		ns += '#', ns += '#';
+		for (int i = 0; i < n; ++i) ns += s[i], ns += '#';
+		n = n << 1 | 1;
+		this -> ra = vector <int> (n + 5);
 	}
-	str[++tot] = '#';
-}
-
-void force (int pos) {
-	while (pos - tmp_ra >= 1 && pos + tmp_ra <= tot &&
-	str[pos - tmp_ra] == str[pos + tmp_ra]) ++tmp_ra;
-}
-
-void update (int pos) {
-	if (r < pos + tmp_ra - 1) {
-		r = pos + tmp_ra - 1;
-		l = pos - tmp_ra + 1;
+	
+	void Get_ra () {
+		for (int i = 1, l = 0, r = 0; i <= n; ++i) {
+			if (i <= r) ra[i] = min (r - i + 1, ra[l + r - i]);
+			while (i + ra[i] <= n && i - ra[i] >= 1
+			&& ns[i + ra[i]] == ns[i - ra[i]]) ++ra[i];
+			if (i + ra[i] - 1 > r) r = i + ra[i] - 1, l = i - ra[i] + 1;
+		}
 	}
-	ra[pos] = tmp_ra;
-}
+};
 
-void manecher () {
-	for (int i = 1; i <= tot; ++i) {
-		tmp_ra = i > r ? 1 : min (ra[l + r - i], r - i + 1);
-		force (i);
-		update (i);
-	}
-}
+string s;
+
+void init () {}
 
 void charming () {
 	init ();
-	cin >> tmp_str + 1;
-	n = strlen (tmp_str + 1);
-	modify_str ();
-	manecher ();
-	int res = 1;
-	for (int i = 1; i <= tot; ++i) {
-		res = max (res, ra[i] - 1);
-	}
-	cout << res << endl;
+	cin >> s;
+	Manacher manacher (s);
+	manacher.Get_ra ();
+	vector <int> &ra = manacher.ra;
+	cout << *max_element (ra.begin (), ra.end ()) - 1 << endl;
 }
 
 signed main () {
