@@ -22,8 +22,7 @@ struct SA {
 		m = 300;
 		for (int i = 1; i <= n; ++i) ++cnt[rk[i] = s[i]];
 		for (int i = 1; i <= m; ++i) cnt[i] += cnt[i - 1];
-		for (int i = n; i >= 1; --i) 
-		sa[cnt[rk[i]]--] = i;
+		for (int i = n; i >= 1; --i) sa[cnt[rk[i]]--] = i;
 		
 		auto Key2_sort = [&] () {
 			tot = 0;

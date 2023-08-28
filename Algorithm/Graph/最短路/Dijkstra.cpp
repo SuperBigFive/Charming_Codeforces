@@ -13,7 +13,7 @@ struct Dijsktra {
 	vector <int> dis, vis;
 	vector <vector <pair <int, int> > > G;
 	
-	void solve () {
+	void Solve () {
 		priority_queue <pair <int, int>, vector <pair <int, int> >,
 		greater <pair <int, int> > > pq;
 		pq.push (make_pair (0, s)), dis[s] = 0;
@@ -31,11 +31,11 @@ struct Dijsktra {
 		}
 	}
 	
-	Dijsktra (int n, int s, vector <vector <pair <int, int> > > G) {
+	Dijsktra (int n, int s, vector <vector <pair <int, int> > > &G) {
 		this -> n = n, this -> s = s, this -> G = G;
 		dis = vector <int> (n + 5, INT_MAX);
 		vis = vector <int> (n + 5, 0);
-		solve ();
+		Solve ();
 	}
 };
 
