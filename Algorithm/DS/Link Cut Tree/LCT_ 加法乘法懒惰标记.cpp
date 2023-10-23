@@ -2,32 +2,32 @@
 #define ll long long
 #define int ll
 using namespace std;
-const int maxn = 2e5 + 5;
-const int mod = 51061;
+const int N = 2e5 + 5;
+const int MOD = 51061;
 
 int n, q;
-int fa[maxn], rev[maxn];
-int val[maxn], sum[maxn], siz[maxn];
-int lazy_add[maxn], lazy_mul[maxn];
-int ch[maxn][2];
+int fa[N], rev[N];
+int val[N], sum[N], siz[N];
+int lazy_add[N], lazy_mul[N];
+int ch[N][2];
 
 namespace LCT {
 	bool Get (int x) {return x == ch[fa[x]][1];}
 	bool isRoot (int x) {return x != ch[fa[x]][0] && x != ch[fa[x]][1];}
 	void PushUp (int x) {
-		sum[x] = (sum[ch[x][0]] + sum[ch[x][1]] + val[x]) % mod;
+		sum[x] = (sum[ch[x][0]] + sum[ch[x][1]] + val[x]) % MOD;
 		siz[x] = siz[ch[x][0]]+ siz[ch[x][1]] + 1;
 	}
 	void PushAdd (int x, int k) {
-		sum[x] = (sum[x] + k * siz[x]) % mod;
-		val[x] = (val[x] + k) % mod;
-		lazy_add[x] = (lazy_add[x] + k) % mod;
+		sum[x] = (sum[x] + k * siz[x]) % MOD;
+		val[x] = (val[x] + k) % MOD;
+		lazy_add[x] = (lazy_add[x] + k) % MOD;
 	}
 	void PushMul (int x, int k) {
-		sum[x] = (sum[x] * k) % mod;
-		val[x] = (val[x] * k) % mod;
-		lazy_mul[x] = (lazy_mul[x] * k) % mod;
-		lazy_add[x] = (lazy_add[x] * k) % mod;
+		sum[x] = (sum[x] * k) % MOD;
+		val[x] = (val[x] * k) % MOD;
+		lazy_mul[x] = (lazy_mul[x] * k) % MOD;
+		lazy_add[x] = (lazy_add[x] * k) % MOD;
 	}
 	void PushRev (int x) {
 		swap (ch[x][0], ch[x][1]);
@@ -114,10 +114,10 @@ namespace LCT {
 }
 
 void init () {
-	fill (val + 1, val + maxn, 1);
-	fill (sum + 1, sum + maxn, 1);
-	fill (siz + 1, siz + maxn, 1);
-	fill (lazy_mul + 1, lazy_mul + maxn, 1);
+	fill (val + 1, val + N, 1);
+	fill (sum + 1, sum + N, 1);
+	fill (siz + 1, siz + N, 1);
+	fill (lazy_mul + 1, lazy_mul + N, 1);
 }
 
 void charming () {

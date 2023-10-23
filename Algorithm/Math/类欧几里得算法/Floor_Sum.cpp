@@ -6,6 +6,9 @@ const int N = 2e5 + 5;
 const int MOD = 998244353;
 
 ll Floor_Sum (int a, int b, int c, int n) {
+  '''
+    f (a, b, c, n) = \sum_{i = 0}^{n}{\frac {ai + b}{c}}
+  '''
   ll ans = 0;
   if (a >= c) {
     ans = (ans + n * (n + 1) / 2 * (a / c)) % MOD;
