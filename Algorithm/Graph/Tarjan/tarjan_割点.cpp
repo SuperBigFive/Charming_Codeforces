@@ -1,0 +1,81 @@
+#include <bits/stdc++.h>
+#define ll long long
+using namespace std;
+const int N = 4e6 + 5;
+
+int n, m, tot, bcc_cnt, cut_cnt;
+int to[N], nxt[N], head[N], vis[N];
+int dfn[N], low[N], isCut[N], ans[N];
+vector <int> bcc[N];
+
+char getch () {
+  static char buf[100000], *s1, *s2;
+  return (s1 == s2) && (s2 = (s1 = buf) +
+  fread (buf, 1, 100000, stdin)), s1 == s2 ? EOF : *s1++;
+}
+
+int read () {
+  int x = 0; char ch = 0;
+  while (!isdigit (ch)) ch = getch ();
+  while (isdigit (ch)) x = x * 10 + ch - '0', ch = getch ();
+  return x;
+}
+
+void add_edge (int u, int v) {
+  to[tot] = v, nxt[tot] = head[u], head[u] = tot++;
+}
+
+void Tarjan (int u, vector <int> &stk) {
+  stk.emplace_back (u);
+  dfn[u] = low[u] = ++tot;
+  int child = 0;
+  for (int i = head[u], v; i != -1; i = nxt[i]) {
+    if (vis[i >> 1]) continue;
+    v = to[i], vis[i >> 1] = 1;
+    if (!dfn[v]) {
+      ++child;
+      Tarjan (v, stk);
+      low[u] = min (low[u], low[v]);
+      if (low[v] >= dfn[u]) {
+        ++bcc_cnt;
+        isCut[u] = 1;
+        do {
+          bcc[bcc_cnt].emplace_back (stk.back ());
+          stk.pop_back ();
+        } while (bcc[bcc_cnt].back () != v);
+        bcc[bcc_cnt].emplace_back (u);
+      }
+    }
+    else low[u] = min (low[u], dfn[v]);
+  }
+  if (child < 2 && (int) stk.size () == 1) isCut[u] = 0;
+}
+
+void init () {tot = 0; memset (head, -1, sizeof head);}
+
+void charming () {
+  init ();
+  n = read (), m = read ();
+  for (int i = 0, u, v; i < m; ++i) {
+    u = read (), v = read ();
+    add_edge (u, v), add_edge (v, u);
+  }
+  tot = 0;
+  for (int i = 1; i <= n; ++i) {
+    if (!dfn[i]) {
+      vector <int> stk;
+      Tarjan (i, stk);
+    }
+  }
+  cut_cnt = 0;
+  for (int i = 1; i <= n; ++i) if (isCut[i]) {
+    ans[++cut_cnt] = i;
+  }
+  printf ("%d\n", cut_cnt);
+  for (int i = 1; i <= cut_cnt; ++i) printf ("%d%c", ans[i], i == cut_cnt ? '\n' : ' ');
+}
+
+signed main () {
+  charming ();
+  return 0;
+}
