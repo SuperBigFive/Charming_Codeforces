@@ -1,0 +1,8 @@
+f = OpenRead[
+   "D:\\Cosecant\\Projects\\ICPC-Private\\templates\\matrix\\in"];
+n = Read[f, Number];
+p = Read[f, Number];
+A = Read[f, Table[Table[Number, {i, 1, n}], {j, 1, n}]];
+Export["D:\\Cosecant\\Projects\\ICPC-Private\\templates\\matrix\\ans",
+   Inverse[A, Modulus -> p], "Table"];
+Close[f];
